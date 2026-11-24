@@ -143,41 +143,6 @@
     section.activity { display: block !important; border: none; page-break-after: always; }
     header { background: none; color: #000; }
   }
-
-  /* ---- Fit-to-screen layout (projector / large screens) ---- */
-  .key {
-    position: fixed; inset: 6vh 6vw; z-index: 20; overflow: auto;
-    background: var(--paper); border: 3px solid var(--purple);
-    box-shadow: 0 10px 40px rgba(0,0,0,.35); font-size: clamp(1rem, 2.2vw, 1.6rem);
-    cursor: pointer; margin: 0;
-  }
-  .key h3::after { content: "  (click to close)"; font-size: .6em; color: var(--muted); font-weight: 400; }
-  .fitting .err .fix { display: inline; margin-left: 4px; }
-  .fitting .err .fix::before { content: "→ "; }
-  @media screen and (min-width: 700px) {
-    html, body { height: 100%; }
-    body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-    header { padding: 6px 16px; }
-    header .unit { width: 40px; height: 40px; font-size: 20px; border-width: 3px; }
-    header h1 { font-size: 1.3rem; }
-    header p { display: none; }
-    .wrap, nav { max-width: none; }
-    nav { padding: 6px 16px 0; width: 100%; }
-    main { width: 100%; }
-    nav button { padding: 6px; }
-    main { max-width: none; flex: 1; min-height: 0; padding: 0 16px 10px; display: flex; }
-    section.activity.active {
-      display: flex; flex-direction: column; flex: 1; min-height: 0; padding: 10px 24px;
-    }
-    h2 { font-size: 1.2rem; margin: 0; }
-    .task { margin: 6px 0 8px; padding: 6px 12px; }
-    .controls { margin-bottom: 6px; }
-    .notebook { display: none; }
-    .dialogue { flex: 1; min-height: 0; overflow: hidden; line-height: 1.45; }
-    .line { grid-template-columns: 5.8em 1fr; padding: 1px 0; }
-    .scene { margin: .3em 0 .1em; }
-    .gap { min-width: 6em; }
-  }
 </style>
 </head>
 <body>
@@ -346,29 +311,9 @@
     const next = document.querySelector('#a2 .err:not(.shown)');
     if (next) {
       next.classList.add('shown');
+      next.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
-
-  // Scale the dialogue so it fills the screen without scrolling
-  function fit() {
-    const sec = document.querySelector('section.activity.active');
-    const d = sec.querySelector('.dialogue');
-    if (window.innerWidth < 700) { d.style.fontSize = ''; return; }
-    sec.classList.add('fitting');            // measure with corrections visible
-    let lo = 10, hi = 80;
-    while (hi - lo > 0.5) {
-      const m = (lo + hi) / 2;
-      d.style.fontSize = m + 'px';
-      if (d.scrollHeight <= d.clientHeight && d.scrollWidth <= d.clientWidth) lo = m; else hi = m;
-    }
-    d.style.fontSize = lo + 'px';
-    sec.classList.remove('fitting');
-  }
-  window.addEventListener('resize', fit);
-  window.addEventListener('load', fit);
-  document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', fit));
-  document.querySelectorAll('.key').forEach(k => k.addEventListener('click', () => k.classList.remove('shown')));
-  fit();
 </script>
 </body>
 </html>
