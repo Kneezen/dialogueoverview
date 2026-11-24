@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Dream House – Listening Activities</title>
+<style>
+  :root {
+    --purple: #6b3fa0;
+    --purple-dark: #4b2a75;
+    --green: #8cc63f;
+    --green-soft: #eef6e2;
+    --ink: #222;
+    --muted: #666;
+    --paper: #fffdf8;
+    --line: #d9d2c3;
+    --red: #d0342c;
+    --blue: #1f6fd1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f3f0ea;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(90deg, var(--purple-dark), var(--purple));
+    color: #fff;
+    padding: 18px 16px;
+  }
+  header .wrap { display: flex; align-items: center; gap: 14px; }
+  .unit {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #fff; color: var(--purple-dark);
+    border: 4px solid var(--green);
+    display: grid; place-items: center;
+    font-size: 26px; font-weight: 800; flex: none;
+  }
+  header h1 { margin: 0; font-size: 1.6rem; }
+  header p { margin: 0; opacity: .85; font-size: .95rem; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  nav {
+    display: flex; gap: 8px; padding: 14px 16px 0;
+    max-width: 900px; margin: 0 auto;
+  }
+  nav button {
+    flex: 1; padding: 12px; font-size: 1rem; font-weight: 700;
+    border: 2px solid var(--purple); background: #fff; color: var(--purple);
+    border-radius: 10px 10px 0 0; cursor: pointer;
+  }
+  nav button.active { background: var(--purple); color: #fff; }
+  main { max-width: 900px; margin: 0 auto; padding: 0 16px 40px; }
+  section.activity {
+    display: none;
+    background: var(--paper);
+    border: 2px solid var(--purple);
+    border-radius: 0 0 14px 14px;
+    padding: 22px 22px 28px;
+  }
+  section.activity.active { display: block; }
+  h2 { color: var(--purple-dark); margin: 0 0 6px; font-size: 1.4rem; }
+  .task {
+    background: var(--green-soft);
+    border-left: 6px solid var(--green);
+    padding: 10px 14px; border-radius: 6px; margin: 10px 0 18px;
+  }
+  .task strong { color: var(--purple-dark); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .controls button {
+    padding: 8px 14px; font-size: .95rem; font-weight: 600;
+    border-radius: 8px; border: 2px solid var(--purple);
+    background: #fff; color: var(--purple); cursor: pointer;
+  }
+  .controls button.primary { background: var(--purple); color: #fff; }
+  .controls button:hover { filter: brightness(.95); }
+
+  .dialogue { font-size: 1.12rem; }
+  .line { display: grid; grid-template-columns: 90px 1fr; gap: 10px; padding: 4px 0; }
+  .who { font-weight: 700; color: var(--purple-dark); }
+  .scene {
+    font-weight: 700; font-style: italic; margin: 14px 0 6px;
+    color: var(--muted);
+  }
+
+  /* Activity 1 – gaps */
+  .gap {
+    display: inline-block; min-width: 120px;
+    border-bottom: 2px solid var(--ink);
+    text-align: center; cursor: pointer; padding: 0 4px;
+    white-space: nowrap;
+  }
+  .gap .num {
+    font-size: .75em; font-weight: 700; color: #fff; background: var(--purple);
+    border-radius: 50%; display: inline-block; width: 1.6em; height: 1.6em;
+    line-height: 1.6em; text-align: center; margin-right: 4px; vertical-align: 2px;
+  }
+  .gap .ans { color: var(--blue); font-weight: 700; visibility: hidden; }
+  .gap.shown .ans { visibility: visible; }
+
+  /* Activity 2 – wrong words */
+  .err { cursor: pointer; }
+  .err .fix { display: none; }
+  .err.shown .wrong {
+    color: var(--red); text-decoration: line-through; text-decoration-thickness: 2px;
+  }
+  .err.shown .fix {
+    display: inline; color: var(--blue); font-weight: 700;
+    margin-left: 4px;
+  }
+  .err.shown .fix::before { content: "→ "; color: var(--muted); font-weight: 400; }
+
+  .key {
+    margin-top: 24px; padding: 14px 18px; border: 2px dashed var(--line);
+    border-radius: 10px; display: none;
+  }
+  .key.shown { display: block; }
+  .key h3 { margin: 0 0 8px; color: var(--purple-dark); }
+  .key ol { margin: 0; padding-left: 22px; columns: 2; column-gap: 30px; }
+  .key li { break-inside: avoid; }
+  .key .w { color: var(--red); text-decoration: line-through; }
+  .key .c { color: var(--blue); font-weight: 700; }
+
+  .notebook {
+    margin-top: 20px; font-size: .95rem; color: var(--muted);
+  }
+  .notebook table { border-collapse: collapse; margin-top: 6px; }
+  .notebook td {
+    border: 1px solid var(--line); padding: 4px 10px; min-width: 150px;
+  }
+
+  @media (max-width: 600px) {
+    .line { grid-template-columns: 1fr; gap: 0; }
+    .key ol { columns: 1; }
+    .dialogue { font-size: 1rem; }
+    section.activity { padding: 16px; }
+    .gap { min-width: 90px; }
+  }
+  @media print {
+    body { background: #fff; }
+    nav, .controls, .key { display: none !important; }
+    section.activity { display: block !important; border: none; page-break-after: always; }
+    header { background: none; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="unit">3</div>
+    <div>
+      <h1>The Dream House!</h1>
+      <p>Listening activities · Unit 3 · Reading &amp; Listening</p>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button class="active" data-tab="a1">Activity 1 · Fill in the gaps</button>
+  <button data-tab="a2">Activity 2 · Find the mistakes</button>
+</nav>
+
+<main>
+<!-- ================= ACTIVITY 1 ================= -->
+<section class="activity active" id="a1">
+  <h2>Activity 1 · Listen and fill in the gaps</h2>
+  <div class="task">
+    <strong>Listen to the dialogue.</strong> Some words are missing.
+    Write the numbers <strong>1–16</strong> in your notebook and write the missing words next to them.
+  </div>
+
+  <div class="controls">
+    <button class="primary" onclick="toggleAll('#a1 .gap', true)">Show all answers</button>
+    <button onclick="toggleAll('#a1 .gap', false)">Hide all answers</button>
+    <button onclick="toggleKey('key1')">Answer key</button>
+  </div>
+
+  <div class="dialogue">
+    <div class="line"><span class="who">Elsa:</span><span>I'm very <span class="gap"><span class="num">1</span><span class="ans">excited</span></span> about our trip to see Grandpa and Grandma! I can't wait to finally visit <span class="gap"><span class="num">2</span><span class="ans">South Africa</span></span>!</span></div>
+    <div class="line"><span class="who">Cody:</span><span>Yes! I'm really <span class="gap"><span class="num">3</span><span class="ans">looking forward</span></span> to it, too.</span></div>
+    <div class="line"><span class="who">Elsa:</span><span>ROLO, did you find a nice place for us to stay?</span></div>
+    <div class="line"><span class="who">ROLO:</span><span>I think so. This <span class="gap"><span class="num">4</span><span class="ans">website</span></span> has got lots of nice houses for you to stay during your visit. It's got bungalows, <span class="gap"><span class="num">5</span><span class="ans">cottages</span></span> and villas. I can download them for you.</span></div>
+    <div class="line"><span class="who">ROLO:</span><span>Let's go on a <span class="gap"><span class="num">6</span><span class="ans">virtual</span></span> tour! This is a villa. It's the <span class="gap"><span class="num">7</span><span class="ans">biggest</span></span> one on the site.</span></div>
+    <div class="line"><span class="who">Cody:</span><span>Amazing! Look at the bedrooms! They're much <span class="gap"><span class="num">8</span><span class="ans">bigger than</span></span> ours.</span></div>
+    <div class="line"><span class="who">Elsa:</span><span>Wow! They're <span class="gap"><span class="num">9</span><span class="ans">as big as</span></span> our living room!</span></div>
+    <div class="line"><span class="who">Cody:</span><span>This house is so cool! And it's very <span class="gap"><span class="num">10</span><span class="ans">close</span></span> to Grandma and Grandpa's.</span></div>
+    <div class="line"><span class="who">Mum:</span><span>OK, let's stay there. It looks very nice.</span></div>
+
+    <div class="scene">In South Africa …</div>
+    <div class="line"><span class="who">Cody:</span><span>You can't be <span class="gap"><span class="num">11</span><span class="ans">serious</span></span>! Is this it?</span></div>
+    <div class="line"><span class="who">Elsa:</span><span>It's <span class="gap"><span class="num">12</span><span class="ans">nothing like</span></span> the one we saw on the virtual tour. It's much <span class="gap"><span class="num">13</span><span class="ans">older</span></span> and <span class="gap"><span class="num">14</span><span class="ans">uglier than</span></span> the one on the website. Look! There are even <span class="gap"><span class="num">15</span><span class="ans">broken</span></span> windows!</span></div>
+    <div class="line"><span class="who">Dad:</span><span>Oh, dear! We should call Grandma Linda.</span></div>
+    <div class="line"><span class="who">Mum:</span><span>Hi, Mum! The good news is we are here. The bad news is the house is terrible!</span></div>
+    <div class="line"><span class="who">Grandma:</span><span>Don't worry! You can all stay with us!</span></div>
+    <div class="line"><span class="who">Mum:</span><span>Thank you, Mum! I guess you shouldn't <span class="gap"><span class="num">16</span><span class="ans">trust</span></span> everything that you see online, after all!</span></div>
+  </div>
+
+  <div class="key" id="key1">
+    <h3>Answer key</h3>
+    <ol>
+      <li class="c">excited</li>
+      <li class="c">South Africa</li>
+      <li class="c">looking forward</li>
+      <li class="c">website</li>
+      <li class="c">cottages</li>
+      <li class="c">virtual</li>
+      <li class="c">biggest</li>
+      <li class="c">bigger than</li>
+      <li class="c">as big as</li>
+      <li class="c">close</li>
+      <li class="c">serious</li>
+      <li class="c">nothing like</li>
+      <li class="c">older</li>
+      <li class="c">uglier than</li>
+      <li class="c">broken</li>
+      <li class="c">trust</li>
+    </ol>
+  </div>
+
+  <p class="notebook">Tip: Click on a gap to show or hide its answer.</p>
+</section>
+
+<!-- ================= ACTIVITY 2 ================= -->
+<section class="activity" id="a2">
+  <h2>Activity 2 · Listen and correct the mistakes</h2>
+  <div class="task">
+    <strong>Listen again.</strong> There are <strong>15 wrong words</strong> in the dialogue.
+    Find them and write the correct words in your notebook.<br>
+    Example: <em>South America</em> ✗ → <em>South Africa</em> ✓
+  </div>
+
+  <div class="controls">
+    <button class="primary" onclick="toggleAll('#a2 .err', true)">Show all corrections</button>
+    <button onclick="toggleAll('#a2 .err', false)">Hide all corrections</button>
+    <button onclick="revealNext()">Show next correction</button>
+    <button onclick="toggleKey('key2')">Answer key</button>
+  </div>
+
+  <div class="dialogue">
+    <div class="line"><span class="who">Elsa:</span><span>I'm very excited about our trip to see Grandpa and Grandma! I can't wait to finally visit <span class="err"><span class="wrong">South America</span><span class="fix">South Africa</span></span>!</span></div>
+    <div class="line"><span class="who">Cody:</span><span>Yes! I'm really <span class="err"><span class="wrong">looking after</span><span class="fix">looking forward</span></span> to it, too.</span></div>
+    <div class="line"><span class="who">Elsa:</span><span>ROLO, did you find a nice <span class="err"><span class="wrong">school</span><span class="fix">place</span></span> for us to stay?</span></div>
+    <div class="line"><span class="who">ROLO:</span><span>I think so. This website has got lots of nice <span class="err"><span class="wrong">hotels</span><span class="fix">houses</span></span> for you to stay during your visit. It's got bungalows, <span class="err"><span class="wrong">flats</span><span class="fix">cottages</span></span> and villas. I can download them for you.</span></div>
+    <div class="line"><span class="who">ROLO:</span><span>Let's go on a virtual tour! This is a villa. It's the <span class="err"><span class="wrong">smallest</span><span class="fix">biggest</span></span> one on the site.</span></div>
+    <div class="line"><span class="who">Cody:</span><span>Amazing! Look at the <span class="err"><span class="wrong">kitchens</span><span class="fix">bedrooms</span></span>! They're much bigger than ours.</span></div>
+    <div class="line"><span class="who">Elsa:</span><span>Wow! They're as big as our <span class="err"><span class="wrong">garden</span><span class="fix">living room</span></span>!</span></div>
+    <div class="line"><span class="who">Cody:</span><span>This house is so cool! And it's very <span class="err"><span class="wrong">far from</span><span class="fix">close to</span></span> Grandma and Grandpa's.</span></div>
+    <div class="line"><span class="who">Mum:</span><span>OK, let's stay there. It looks very <span class="err"><span class="wrong">cheap</span><span class="fix">nice</span></span>.</span></div>
+
+    <div class="scene">In South Africa …</div>
+    <div class="line"><span class="who">Cody:</span><span>You can't be serious! Is this it?</span></div>
+    <div class="line"><span class="who">Elsa:</span><span>It's nothing like the one we saw on the virtual tour. It's much older and <span class="err"><span class="wrong">smaller</span><span class="fix">uglier</span></span> than the one on the website. Look! There are even broken <span class="err"><span class="wrong">doors</span><span class="fix">windows</span></span>!</span></div>
+    <div class="line"><span class="who">Dad:</span><span>Oh, dear! We should <span class="err"><span class="wrong">email</span><span class="fix">call</span></span> Grandma Linda.</span></div>
+    <div class="line"><span class="who">Mum:</span><span>Hi, Mum! The good news is we are here. The bad news is the house is <span class="err"><span class="wrong">wonderful</span><span class="fix">terrible</span></span>!</span></div>
+    <div class="line"><span class="who">Grandma:</span><span>Don't worry! You can all stay with us!</span></div>
+    <div class="line"><span class="who">Mum:</span><span>Thank you, Mum! I guess you shouldn't <span class="err"><span class="wrong">buy</span><span class="fix">trust</span></span> everything that you see online, after all!</span></div>
+  </div>
+
+  <div class="key" id="key2">
+    <h3>Answer key</h3>
+    <ol>
+      <li><span class="w">South America</span> → <span class="c">South Africa</span></li>
+      <li><span class="w">looking after</span> → <span class="c">looking forward</span></li>
+      <li><span class="w">school</span> → <span class="c">place</span></li>
+      <li><span class="w">hotels</span> → <span class="c">houses</span></li>
+      <li><span class="w">flats</span> → <span class="c">cottages</span></li>
+      <li><span class="w">smallest</span> → <span class="c">biggest</span></li>
+      <li><span class="w">kitchens</span> → <span class="c">bedrooms</span></li>
+      <li><span class="w">garden</span> → <span class="c">living room</span></li>
+      <li><span class="w">far from</span> → <span class="c">close to</span></li>
+      <li><span class="w">cheap</span> → <span class="c">nice</span></li>
+      <li><span class="w">smaller</span> → <span class="c">uglier</span></li>
+      <li><span class="w">doors</span> → <span class="c">windows</span></li>
+      <li><span class="w">email</span> → <span class="c">call</span></li>
+      <li><span class="w">wonderful</span> → <span class="c">terrible</span></li>
+      <li><span class="w">buy</span> → <span class="c">trust</span></li>
+    </ol>
+  </div>
+
+  <p class="notebook">Tip: Click on a word in the dialogue to check it. Wrong words turn red and show the correction.</p>
+</section>
+</main>
+
+<script>
+  // Tabs
+  document.querySelectorAll('nav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('section.activity').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Click a single gap / mistake to toggle it
+  document.querySelectorAll('.gap, .err').forEach(el => {
+    el.addEventListener('click', () => el.classList.toggle('shown'));
+  });
+
+  function toggleAll(selector, show) {
+    document.querySelectorAll(selector).forEach(el => el.classList.toggle('shown', show));
+  }
+
+  function toggleKey(id) {
+    document.getElementById(id).classList.toggle('shown');
+  }
+
+  function revealNext() {
+    const next = document.querySelector('#a2 .err:not(.shown)');
+    if (next) {
+      next.classList.add('shown');
+      next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+</script>
+</body>
+</html>
